@@ -1,12 +1,11 @@
+@Library('shared-lib') _
+
 pipeline {
-
-    agent {
-        label 'agent01'
-    }
-
+    agent any
+    
     tools {
         jdk 'jdk-11.0.2'
-        maven 'maven-354'
+        maven 'maven-3.5.4'
     }
 
     environment {
@@ -15,10 +14,12 @@ pipeline {
     }
 
     stages {
-
         stage('Build Java App') {
             steps {
-                sh 'mvn package install -DskipTests'
+                script {
+                    def mvn = new edu.iti.mavenClass()
+                    mvn.build('clean package -DskipTests')
+                }
             }
         }
 
@@ -28,23 +29,34 @@ pipeline {
             }
         }
 
+        stage('Test Java App') {
+            steps {
+                script {
+                    def mvn = new edu.iti.mavenClass()
+                    mvn.test('')
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t java-app:v1 .'
+                script {
+                    def dockerObj = new edu.iti.dockerClass()
+                    dockerObj.build('ahmedgamal/java-app', "v${env.BUILD_ID}")
+                }
             }
         }
 
-        stage('Docker Login') {
+        stage('Docker Login & Push') {
             steps {
-                sh 'docker login -u ${dockerUsername} -p ${dockerPassword}'
+                script {
+                    def dockerObj = new edu.iti.dockerClass()
+                    dockerObj.login(env.dockerUsername, env.dockerPassword)
+                    dockerObj.push('ahmedgamal/java-app', "v${env.BUILD_ID}")
+                }
             }
         }
-
-        // stage('Push Docker Image') {
-        //     steps {
-        //         sh 'docker push java-app:v1'
-        //     }
-        // }
-
     }
 }
+
+
