@@ -1,7 +1,7 @@
 @Library('shared-lib') _
 
 pipeline {
-    agent any
+    agent 'agent01'
     
     tools {
         jdk 'jdk-11.0.2'
