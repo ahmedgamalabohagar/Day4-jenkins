@@ -43,7 +43,7 @@ pipeline {
             steps {
                 script {
                     def dockerObj = new edu.iti.dockerClass()
-                    dockerObj.build('ahmedgamal/java-app', "v${env.BUILD_ID}")
+                    dockerObj.build('ahmedabohagar/java-app', "v${env.BUILD_ID}")
                 }
             }
         }
@@ -53,7 +53,7 @@ pipeline {
                 script {
                     def dockerObj = new edu.iti.dockerClass()
                     dockerObj.login(env.dockerUsername, env.dockerPassword)
-                    dockerObj.push('ahmedgamal/java-app', "v${env.BUILD_ID}")
+                    dockerObj.push('ahmedabohagar/java-app', "v${env.BUILD_ID}")
                 }
             }
         }
