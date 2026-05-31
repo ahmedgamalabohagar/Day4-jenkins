@@ -1,8 +1,9 @@
 @Library('shared-lib') _
 
 pipeline {
-    agent 'agent01'
-    
+    agent{
+        label 'agent01'
+    }
     tools {
         jdk 'jdk-11.0.2'
         maven 'maven-354'
